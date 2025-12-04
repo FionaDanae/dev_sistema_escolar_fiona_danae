@@ -1,0 +1,159 @@
+<div class="registration-form">
+  <h2>Ingresa Los Datos Del Maestro</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success" style="margin-bottom: 10px;">
+    {{ successMessage }}
+  </div>
+
+  <form #maestroForm="ngForm" (ngSubmit)="editar ? actualizarMaestro() : registrarMaestro()">
+
+    <div class="form-group">
+      <label for="idTrabajador">ID de trabajador</label>
+      <input
+        type="text"
+        id="idTrabajador"
+        name="idTrabajador"
+        [(ngModel)]="maestro.idTrabajador"
+        placeholder="Escribe el ID de trabajador (9 dígitos)"
+        pattern="^[0-9]{9}$"
+        minlength="9"
+        maxlength="9"
+        inputmode="numeric"
+        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+      />
+      <div *ngIf="errors.idTrabajador" class="invalid-feedback">{{ errors.idTrabajador }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" name="nombre" [(ngModel)]="maestro.nombre" placeholder="Escribe nombre" (keypress)="soloLetras($event)" />
+      <div *ngIf="errors.nombre" class="invalid-feedback">{{ errors.nombre }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="apellidos">Apellidos</label>
+      <input type="text" id="apellidos" name="apellidos" [(ngModel)]="maestro.apellidos" placeholder="Escribe apellidos" (keypress)="soloLetras($event)" />
+      <div *ngIf="errors.apellidos" class="invalid-feedback">{{ errors.apellidos }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="correoElectronico">Correo electrónico</label>
+      <input type="email" id="correoElectronico" name="correoElectronico" [(ngModel)]="maestro.correoElectronico" placeholder="Escribe correo" [disabled]="editar" />
+      <div *ngIf="errors.correoElectronico" class="invalid-feedback">{{ errors.correoElectronico }}</div>
+    </div>
+
+    <div class="form-group password-group" *ngIf="!editar">
+      <label for="contrasena">Contraseña</label>
+      <input
+        [type]="passwordVisible ? 'text' : 'password'"
+        id="contrasena"
+        name="contrasena"
+        [(ngModel)]="maestro.contrasena"
+        required
+        placeholder="Escribe contraseña"
+      />
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁</span>
+      <div *ngIf="errors.contrasena" class="invalid-feedback">{{ errors.contrasena }}</div>
+    </div>
+
+    <div class="form-group password-group" *ngIf="!editar">
+      <label for="confirmarContrasena">Confirmar contraseña</label>
+      <input
+        [type]="passwordVisible ? 'text' : 'password'"
+        id="confirmarContrasena"
+        name="confirmarContrasena"
+        [(ngModel)]="maestro.confirmarContrasena"
+        required
+        placeholder="Confirma la contraseña"
+      />
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁</span>
+      <div *ngIf="errors.confirmarContrasena" class="invalid-feedback">{{ errors.confirmarContrasena }}</div>
+      <small
+        *ngIf="maestro.contrasena && maestro.confirmarContrasena && maestro.contrasena !== maestro.confirmarContrasena"
+        class="text-danger"
+        style="color: #e62e4c; display: block; margin-top: 5px;"
+      >
+        Las contraseñas no coinciden.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input type="date" id="fechaNacimiento" name="fechaNacimiento" [(ngModel)]="maestro.fechaNacimiento" />
+      <div *ngIf="errors.fechaNacimiento" class="invalid-feedback">{{ errors.fechaNacimiento }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" name="telefono" [(ngModel)]="maestro.telefono" placeholder="Escribe teléfono" mask='(000) 000-0000' />
+      <div *ngIf="errors.telefono" class="invalid-feedback">{{ errors.telefono }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="rfc">RFC</label>
+      <input
+      type="text"
+      id="rfc"
+      name="rfc"
+      [(ngModel)]="maestro.rfc"
+      placeholder="Escribe RFC"
+      minlength="12"
+      maxlength="13"
+      style="text-transform: uppercase;"
+      (keypress)="soloLetrasYNumeros($event)"
+      />
+      <span class="char-count">{{ maestro.rfc ? maestro.rfc.length : 0 }}/13</span>
+      <div *ngIf="errors.rfc" class="invalid-feedback">{{ errors.rfc }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="cubiculo">Cubículo</label>
+      <input
+        type="text"
+        id="cubiculo"
+        name="cubiculo"
+        [(ngModel)]="maestro.cubiculo"
+        placeholder="Ejemplo: CCO4 103"
+        style="text-transform: uppercase;"
+        (keypress)="soloLetrasYNumerosConEspacio($event)"
+        maxlength="8"
+      />
+      <div *ngIf="errors.cubiculo" class="invalid-feedback">{{ errors.cubiculo }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="areaInvestigacion">Área de investigación</label>
+      <select id="areaInvestigacion" name="areaInvestigacion" [(ngModel)]="maestro.areaInvestigacion">
+        <option value="">Selecciona un área</option>
+        <option *ngFor="let area of areas" [value]="area.viewValue">{{ area.viewValue }}</option>
+      </select>
+      <div *ngIf="errors.areaInvestigacion" class="invalid-feedback">{{ errors.areaInvestigacion }}</div>
+    </div>
+
+    <div class="form-group">
+      <label>Selecciona las materias a impartir</label>
+      <div>
+        <label *ngFor="let materia of materias">
+          <input
+            type="checkbox"
+            [checked]="isMateriaSelected(materia.nombre)"
+            (change)="seleccionarMateria(materia.nombre, $any($event.target).checked)"
+          /> {{ materia.nombre }}
+        </label>
+      </div>
+      <div *ngIf="errors.materias" class="invalid-feedback">{{ errors.materias }}</div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn cancel-btn" (click)="regresar()" style="background-color: #28a745; border-color: #28a745; color: white;">
+        Regresar
+      </button>
+      <button type="button" class="btn cancel-btn" (click)="cancelarRegistro()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn register-btn">
+        {{ editar ? 'Actualizar' : 'Registrar' }}
+      </button>
+    </div>
+  </form>
+</div>

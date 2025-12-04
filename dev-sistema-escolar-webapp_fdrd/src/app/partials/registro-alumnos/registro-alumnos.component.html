@@ -1,0 +1,206 @@
+<div class="registration-form">
+  <h2>Ingresa Los Datos Del Alumno</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success" style="margin-bottom: 10px;">
+    {{ successMessage }}
+  </div>
+  
+  <form #alumnoForm="ngForm" (ngSubmit)="editar ? actualizarAlumno() : registrarAlumno()">
+    <div class="form-group">
+      <label for="idMatricula">ID/Matrícula</label>
+      <input
+        type="text"
+        id="idMatricula"
+        name="idMatricula"
+        [(ngModel)]="alumno.idMatricula"
+        required
+        placeholder="Escribe clave de alumno (9 dígitos)"
+        pattern="^[0-9]{9}$"
+        minlength="9"
+        maxlength="9"
+        inputmode="numeric"
+        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+      />
+      <div *ngIf="errors.idMatricula" class="invalid-feedback">{{ errors.idMatricula }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        [(ngModel)]="alumno.nombre"
+        required
+        placeholder="Escribe nombre o nombres"
+        (keypress)="soloLetras($event)"
+      />
+      <div *ngIf="errors.nombre" class="invalid-feedback">{{ errors.nombre }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="apellidos">Apellidos</label>
+      <input
+        type="text"
+        id="apellidos"
+        name="apellidos"
+        [(ngModel)]="alumno.apellidos"
+        required
+        placeholder="Escribe apellidos"
+        (keypress)="soloLetras($event)"
+      />
+      <div *ngIf="errors.apellidos" class="invalid-feedback">{{ errors.apellidos }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="correoElectronico">Correo electrónico</label>
+      <input
+        type="email"
+        id="correoElectronico"
+        name="correoElectronico"
+        [(ngModel)]="alumno.correoElectronico"
+        required
+        placeholder="Escribe correo electrónico"
+        [disabled]="editar"
+      />
+      <div *ngIf="errors.correoElectronico" class="invalid-feedback">{{ errors.correoElectronico }}</div>
+    </div>
+
+    <div class="form-group password-group" *ngIf="!editar">
+      <label for="contrasena">Contraseña</label>
+      <input
+        [type]="passwordVisible ? 'text' : 'password'"
+        id="contrasena"
+        name="contrasena"
+        [(ngModel)]="alumno.contrasena"
+        required
+        placeholder="Escribe contraseña"
+      />
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁</span>
+      <div *ngIf="errors.contrasena" class="invalid-feedback">{{ errors.contrasena }}</div>
+    </div>
+
+    <div class="form-group password-group" *ngIf="!editar">
+      <label for="confirmarContrasena">Confirmar contraseña</label>
+      <input
+        [type]="passwordVisible ? 'text' : 'password'"
+        id="confirmarContrasena"
+        name="confirmarContrasena"
+        [(ngModel)]="alumno.confirmarContrasena"
+        required
+        placeholder="Confirma la contraseña"
+      />
+      <span class="password-toggle" (click)="togglePasswordVisibility()">👁</span>
+      <div *ngIf="errors.confirmarContrasena" class="invalid-feedback">{{ errors.confirmarContrasena }}</div>
+      <small
+        *ngIf="alumno.contrasena && alumno.confirmarContrasena && alumno.contrasena !== alumno.confirmarContrasena"
+        class="text-danger"
+        style="color: #e62e4c; display: block; margin-top: 5px;"
+      >
+        Las contraseñas no coinciden.
+      </small>
+    </div>
+
+    <div class="form-group date-group">
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input
+        type="date"
+        id="fechaNacimiento"
+        name="fechaNacimiento"
+        [(ngModel)]="alumno.fechaNacimiento"
+        (change)="calcularEdad()"
+      />
+      <div *ngIf="errors.fechaNacimiento" class="invalid-feedback">{{ errors.fechaNacimiento }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="curp">CURP</label>
+      <input
+        type="text"
+        id="curp"
+        name="curp"
+        [(ngModel)]="alumno.curp"
+        maxlength="18"
+        required
+        placeholder="Escribe CURP"
+        style="text-transform: uppercase;"
+        pattern="^[A-Z0-9]+$"
+        (keypress)="soloLetrasYNumeros($event)"
+      />
+      <span class="char-count">{{ alumno.curp ? alumno.curp.length : 0 }}/18</span>
+      <div *ngIf="errors.curp" class="invalid-feedback">{{ errors.curp }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="rfc">RFC</label>
+      <input
+        type="text"
+        id="rfc"
+        name="rfc"
+        [(ngModel)]="alumno.rfc"
+        minlength="12"
+        maxlength="13"
+        required
+        placeholder="Escribe RFC"
+        style="text-transform: uppercase;"
+        pattern="^[A-Z0-9]+$"
+        (keypress)="soloLetrasYNumeros($event)"
+      />
+      <span class="char-count">{{ alumno.rfc ? alumno.rfc.length : 0 }}/13</span>
+      <div *ngIf="errors.rfc" class="invalid-feedback">{{ errors.rfc }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="edad">Edad</label>
+      <input
+        type="number"
+        id="edad"
+        name="edad"
+        [(ngModel)]="alumno.edad"
+        readonly
+        placeholder="Se calcula automáticamente"
+      />
+      <div *ngIf="errors.edad" class="invalid-feedback">{{ errors.edad }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input
+        type="tel"
+        id="telefono"
+        name="telefono"
+        [(ngModel)]="alumno.telefono"
+        placeholder="Escribe teléfono"
+        mask='(000) 000-0000'
+      />
+      <div *ngIf="errors.telefono" class="invalid-feedback">{{ errors.telefono }}</div>
+    </div>
+
+    <div class="form-group">
+      <label for="ocupacion">Ocupación</label>
+      <input
+        type="text"
+        id="ocupacion"
+        name="ocupacion"
+        [(ngModel)]="alumno.ocupacion"
+        placeholder="Escribe ocupación"
+        required
+        pattern="^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$"
+        (keypress)="soloLetras($event)"
+      />
+      <div *ngIf="errors.ocupacion" class="invalid-feedback">{{ errors.ocupacion }}</div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn cancel-btn" (click)="regresar()" style="background-color: #28a745; border-color: #28a745; color: white;">
+        Regresar
+      </button>
+      <button type="button" class="btn cancel-btn" (click)="cancelarRegistro()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn register-btn">
+        {{ editar ? 'Actualizar' : 'Registrar' }}
+      </button>
+    </div>
+  </form>
+</div>
