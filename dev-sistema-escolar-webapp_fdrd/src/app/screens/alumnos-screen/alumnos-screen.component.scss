@@ -114,26 +114,26 @@ table {
 }
 
 .td-editar {
-  color: #0092B8 !important;
-  cursor: pointer !important;
-  font-size: 20px !important;
-  text-align: center;
+    color: #0092B8 !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    text-align: center;
 }
 .td-editar:hover {
-  color: #006179 !important;
-  font-size: 25px !important;
-  text-align: center;
+    color: #006179 !important;
+    font-size: 25px !important;
+    text-align: center;
 }
 .td-eliminar {
-  color: #E84150 !important;
-  cursor: pointer !important;
-  font-size: 20px !important;
-  text-align: center;
+    color: #E84150 !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    text-align: center;
 }
 .td-eliminar:hover {
-  color: #ce1626 !important;
-  font-size: 25px !important;
-  text-align: center;
+    color: #ce1626 !important;
+    font-size: 25px !important;
+    text-align: center;
 }
 
 :host ::ng-deep .mat-mdc-row, :host ::ng-deep .mat-mdc-header-row {
@@ -181,6 +181,15 @@ table {
 }
 
 .mobile-cards { display: none; }
+
+.card-item {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.125);
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    font-family: Nexa;
+    font-size: 14px;
+}
 
 :host ::ng-deep .mat-mdc-paginator {
     background: #fff;
@@ -316,7 +325,7 @@ table {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .desktop-table { display: none; }
     .mobile-cards { display: block; }
 }

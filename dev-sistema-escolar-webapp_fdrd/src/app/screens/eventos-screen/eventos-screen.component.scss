@@ -9,7 +9,7 @@
   }
 }
 
-.wrapper{
+.wrapper {
   height: auto;
 }
 
@@ -106,7 +106,7 @@ table {
 }
 
 .mat-mdc-cell {
-text-align: left;
+  text-align: left;
   font-family: Nexa!important;
   font-size: 15px!important;
   letter-spacing: 0px!important;
@@ -182,13 +182,22 @@ text-align: left;
   display: none;
 }
 
+.card-item {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  font-family: Nexa;
+  font-size: 14px;
+}
+
 :host ::ng-deep .mat-mdc-paginator {
   background: #fff;
   border-radius: 0 0 12px 12px;
   margin-top: 1rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .desktop-table {
     display: none;
   }
